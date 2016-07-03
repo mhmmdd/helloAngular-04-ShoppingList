@@ -3,6 +3,7 @@ import {ShoppingListNewItemComponent} from "./shopping-new-item.component";
 import {ListItem} from "../list-item";
 import {ShoppingListItemComponent} from "./shopping-list-item.component";
 import {ShoppingListService} from "./shopping-list.service";
+import {FilterPipe} from "../filter.pipe";
 
 @Component({
   selector: 'shopping-list',
@@ -12,9 +13,11 @@ import {ShoppingListService} from "./shopping-list.service";
     </section>
     <section>
       <h3>My List</h3>
+      Filter: 
+      <input type="text" #filter (keyup)="0" />
       <div class="list">
         <ul>
-          <li *ngFor="#listItem of listItems" (click)="onSelect(listItem)">
+          <li *ngFor="#listItem of listItems | myFilter:filter.value" (click)="onSelect(listItem)">
             {{listItem.name}} {{listItem.amount}}
           </li>
         </ul>
@@ -26,7 +29,8 @@ import {ShoppingListService} from "./shopping-list.service";
   `,
   inputs: ['itemAdded'],
   directives: [ShoppingListNewItemComponent, ShoppingListItemComponent],
-  providers: [ShoppingListService]
+  providers: [ShoppingListService],
+  pipes: [FilterPipe]
 })
 
 export class ShoppingListComponent implements OnInit{
@@ -38,7 +42,7 @@ export class ShoppingListComponent implements OnInit{
   ngOnInit():any {
     this.listItems = this._shoppingListService.getItems();
   }
-  
+
   onSelect(item: ListItem) {
     this.selectedItem = item;
   }
